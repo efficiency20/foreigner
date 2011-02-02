@@ -72,6 +72,13 @@ module Foreigner
       def foreign_keys(table_name)
         []
       end
+
+      def foreign_key_checks_on
+      end
+
+      def foreign_key_checks_off
+      end
+
     end
   end
 end

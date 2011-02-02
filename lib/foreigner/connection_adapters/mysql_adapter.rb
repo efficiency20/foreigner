@@ -40,6 +40,14 @@ module Foreigner
           ForeignKeyDefinition.new(table_name, row['to_table'], options)
         end
       end
+
+      def foreign_key_checks_on
+        execute "SET foreign_key_checks = 1"
+      end
+
+      def foreign_key_checks_off
+        execute "SET foreign_key_checks = 0"
+      end
     end
   end
 end

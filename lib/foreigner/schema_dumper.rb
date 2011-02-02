@@ -3,10 +3,12 @@ module Foreigner
     def self.included(base)
       base.class_eval do
         include InstanceMethods
-        alias_method_chain :tables, :foreign_keys
+        alias_method_chain :tables,   :foreign_keys
+        alias_method_chain :header,   :turn_foreign_key_checks_off
+        alias_method_chain :trailer,  :turn_foreign_key_checks_on
       end
     end
-    
+
     module InstanceMethods
       def tables_with_foreign_keys(stream)
         tables_without_foreign_keys(stream)
@@ -14,7 +16,17 @@ module Foreigner
           foreign_keys(table, stream)
         end
       end
-      
+
+      def header_with_turn_foreign_key_checks_off(stream)
+        header_without_turn_foreign_key_checks_off(stream)
+        stream.puts "  foreign_key_checks_off\n\n"
+      end
+
+      def trailer_with_turn_foreign_key_checks_on(stream)
+        stream.puts "  foreign_key_checks_on"
+        trailer_without_turn_foreign_key_checks_on(stream)
+      end
+
       private
         def foreign_keys(table_name, stream)
           if (foreign_keys = @connection.foreign_keys(table_name)).any?
